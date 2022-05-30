@@ -1,0 +1,72 @@
+
+# decision tree
+def decision_tree(x_train, y_train, q):
+    dtc = DecisionTreeClassifier(criterion='entropy', random_state=0)
+    dtc = dtc.fit(x_train, y_train)
+    prd1 = dtc.predict(q)
+    return prd1
+
+
+# logistic regression
+def logistic_regression(x_train, y_train, q):
+    lg = LogisticRegression()
+    lg = lg.fit(x_train, y_train)
+    prd2 = lg.predict(q)
+    return prd2
+
+
+# svm
+def supp(x_train, y_train, q):
+    s = svm.SVC()
+    s = s.fit(x_train, y_train)
+    prd3 = s.predict(q)
+    # assert isinstance(prd3, object)
+    return prd3
+
+
+# knn
+def knn(x_train, y_train, q):
+    kn = KNeighborsClassifier(n_neighbors=9)
+    kn.fit(x_train, y_train)
+    prd4 = kn.predict(q)
+    return prd4
+
+
+def NB(x_train, y_train, q):
+    km = BernoulliNB(binarize=True)
+    km.fit(x_train, y_train)
+    prd5 = km.predict(q)
+    return prd5
+
+
+z = decision_tree(x_train, y_train, x_test)
+print('accuracy', metrics.accuracy_score(y_test, z) * 100, '%')
+c = logistic_regression(x_train, y_train, x_test)
+print('accuracy', metrics.accuracy_score(y_test, c) * 100, '%')
+v = supp(x_train, y_train, x_test)
+print('accuracy', metrics.accuracy_score(y_test, v) * 100, '%')
+n = knn(x_train, y_train, x_test)
+print('accuracy', metrics.accuracy_score(y_test, n) * 100, '%')
+m = NB(x_train, y_train, x_test)
+print('accuracy', metrics.accuracy_score(y_test, m) * 100, '%')
+
+while True:
+    m = input('are you want to predict new data ').lower()
+    if m == 'yes':
+        new_data = []
+        for x in range(30):
+            y = input(f'enter F{x + 1} : ')
+            new_data.append(float(y))
+        N = np.array(new_data)
+        f = logistic_regression(x_train, y_train, list([N]))
+        g = supp(x_train, y_train, list([N]))
+        h = decision_tree(x_train, y_train, list([N]))
+        j = knn(x_train, y_train, list([N]))
+        k = NB(x_train, y_train, list([N]))
+        if f + g + h + j + k >= 3:
+            print('the diagnosis is M')
+        else:
+            print('the diagnosis is B')
+    else:
+        print('ok')
+        break
